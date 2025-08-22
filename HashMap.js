@@ -3,7 +3,6 @@ class HashMap {
     constructor(initialCapacity = 16, loadFactorThreshold = 0.7) {
         this.loadFactorThreshold = loadFactorThreshold;
         this.capacity = initialCapacity;
-       this.count = 0; // Initialize count to track number of elements
         this.bucket = new Array(this.capacity).fill(null).map(() => {});
     }
     hash(key){
@@ -29,10 +28,12 @@ class HashMap {
         }
     }
      length(){
+          let count = 0;
         for (let i = 0; i < this.bucket.length; i++) {
             let current = this.bucket[i];
+           
             while (current) {
-                this.count++;
+                count++;
                 current = current.next;
             }
         }
@@ -41,8 +42,9 @@ class HashMap {
     set (key, value){
         const index = this.hash(key);
         const newNode = new Node(key, value);
+        let newCount = this.length();
      // Check if resizing is needed
-        if (this.count / this.capacity >= this.loadFactorThreshold) {
+        if (newCount / this.capacity >= this.loadFactorThreshold) {
             this.resize();
         }
         if(!this.bucket[index]){
@@ -62,7 +64,7 @@ class HashMap {
                 current = current.next;
             }
         }
-        this.count++; // Increment count after adding a new node
+      
     }
     get (key){
         const index = this.hash(key);
@@ -96,7 +98,7 @@ class HashMap {
     }
     
     clear(){
-        this.bucket = new Array(this.capacity).fill(null).map(() => []); // Reset the bucket to empty
+        this.bucket = new Array(this.capacity).fill(null).map(() => {}); // Reset the bucket to empty
         return true; // Return true to indicate successful clearing
     }
     values(){
